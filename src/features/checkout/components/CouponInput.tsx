@@ -26,19 +26,24 @@ export function CouponInput({ onApply, appliedCode, onRemove }: CouponInputProps
   )
   const isApplied = !!appliedCode || (result?.valid === true)
 
-  const handleApply = async () => {
+  const isMountedRef = React.useRef(true)
+  React.useEffect(() => {
+    return () => { isMountedRef.current = false }
+  }, [])
+
+  const handleApply = React.useCallback(async () => {
     if (!code.trim()) return
     setIsLoading(true)
     setResult(null)
     try {
-      const res = await onApply(code.trim())
-      setResult(res)
+      const result = await onApply(code.trim())
+      if (isMountedRef.current) setResult(result)
     } catch {
-      setResult({ valid: false, message: 'Error al validar el cupón.' })
+      if (isMountedRef.current) setResult({ valid: false, message: 'Error al validar el cupón' })
     } finally {
-      setIsLoading(false)
+      if (isMountedRef.current) setIsLoading(false)
     }
-  }
+  }, [code, onApply])
 
   const handleRemove = () => {
     setCode('')

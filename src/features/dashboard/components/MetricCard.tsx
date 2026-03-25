@@ -33,6 +33,7 @@ function Sparkline({ data, positive }: { data: number[]; positive: boolean }) {
       height={h}
       viewBox={`0 0 ${w} ${h}`}
       preserveAspectRatio="none"
+      aria-hidden="true"
       className={positive ? 'text-emerald-400/70' : 'text-red-400/70'}
     >
       <polyline

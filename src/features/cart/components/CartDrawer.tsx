@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { useCartStore } from '@/features/cart/store'
@@ -181,18 +181,19 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-1">
-                <Link href="/carrito" onClick={onClose}>
-                  <Button
-                    variant="outline"
-                    className="w-full border-violet-500/30 bg-violet-500/10 text-violet-300 hover:bg-violet-500/20"
-                  >
-                    Ver carrito
-                  </Button>
+                <Link
+                  href="/carrito"
+                  onClick={onClose}
+                  className={buttonVariants({ variant: 'outline', className: 'w-full border-violet-500/30 bg-violet-500/10 text-violet-300 hover:bg-violet-500/20' })}
+                >
+                  Ver carrito
                 </Link>
-                <Link href="/checkout" onClick={onClose}>
-                  <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold">
-                    Checkout
-                  </Button>
+                <Link
+                  href="/checkout"
+                  onClick={onClose}
+                  className={buttonVariants({ className: 'w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold' })}
+                >
+                  Checkout
                 </Link>
               </div>
             </div>

@@ -24,6 +24,7 @@ export function RatingStars({
   size = 'md',
 }: RatingStarsProps) {
   const [hovered, setHovered] = React.useState(0)
+  const containerRef = React.useRef<HTMLDivElement>(null)
 
   const display = hovered || value
   const iconClass = sizeMap[size]
@@ -35,14 +36,15 @@ export function RatingStars({
       e.preventDefault()
       onChange?.(star)
     } else if (e.key === 'ArrowRight' && star < 5) {
-      ;(document.querySelector(`[data-star="${star + 1}"]`) as HTMLElement)?.focus()
+      ;(containerRef.current?.querySelector(`[data-star="${star + 1}"]`) as HTMLElement)?.focus()
     } else if (e.key === 'ArrowLeft' && star > 1) {
-      ;(document.querySelector(`[data-star="${star - 1}"]`) as HTMLElement)?.focus()
+      ;(containerRef.current?.querySelector(`[data-star="${star - 1}"]`) as HTMLElement)?.focus()
     }
   }
 
   return (
     <div
+      ref={containerRef}
       role={isInteractive ? 'radiogroup' : undefined}
       aria-label={`Calificación: ${value} de 5 estrellas`}
       className="flex items-center gap-0.5"

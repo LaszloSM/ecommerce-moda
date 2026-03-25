@@ -41,6 +41,16 @@ export function ImageUploader({
   const [isDragging, setIsDragging] = React.useState(false)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
+  React.useEffect(() => {
+    return () => {
+      items.forEach(item => {
+        if (item.preview.startsWith('blob:')) {
+          URL.revokeObjectURL(item.preview)
+        }
+      })
+    }
+  }, []) // intentionally empty — runs only on unmount
+
   const uploadFile = async (item: UploadItem) => {
     const supabase = createClient()
     const ext = item.file.name.split('.').pop() ?? 'jpg'
@@ -94,6 +104,10 @@ export function ImageUploader({
 
   const removeItem = (id: string) => {
     setItems((prev) => {
+      const removedItem = prev.find((it) => it.id === id)
+      if (removedItem?.preview.startsWith('blob:')) {
+        URL.revokeObjectURL(removedItem.preview)
+      }
       const next = prev.filter((it) => it.id !== id)
       onChange(next.map((it) => it.url).filter(Boolean) as string[])
       return next
@@ -180,6 +194,7 @@ export function ImageUploader({
                 className="relative group cursor-grab active:cursor-grabbing"
               >
                 <div className="relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/5">
+                  {/* blob: URLs cannot be optimized by next/image */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.preview}

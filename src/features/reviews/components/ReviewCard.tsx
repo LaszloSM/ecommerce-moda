@@ -104,6 +104,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
               <img
                 src={src}
                 alt={`Imagen de reseña ${i + 1}`}
+                loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               />
             </div>

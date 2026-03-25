@@ -32,13 +32,14 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
 
   React.useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (!lightboxOpen) return
       if (e.key === 'ArrowLeft') prev()
       else if (e.key === 'ArrowRight') next()
       else if (e.key === 'Escape') setLightboxOpen(false)
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [prev, next])
+  }, [prev, next, lightboxOpen])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!mainRef.current) return
@@ -94,6 +95,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               type="button"
               variant="ghost"
               size="icon"
+              aria-label="Imagen anterior"
               onClick={(e) => { e.stopPropagation(); prev() }}
               className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/40 hover:bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -103,6 +105,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               type="button"
               variant="ghost"
               size="icon"
+              aria-label="Imagen siguiente"
               onClick={(e) => { e.stopPropagation(); next() }}
               className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/40 hover:bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -167,6 +170,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                   type="button"
                   variant="ghost"
                   size="icon"
+                  aria-label="Imagen anterior"
                   onClick={prev}
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 hover:bg-white/20 text-white"
                 >
@@ -176,6 +180,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                   type="button"
                   variant="ghost"
                   size="icon"
+                  aria-label="Imagen siguiente"
                   onClick={next}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 hover:bg-white/20 text-white"
                 >
@@ -188,6 +193,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                     <button
                       key={i}
                       type="button"
+                      aria-label={`Ir a imagen ${i + 1}`}
                       onClick={() => setCurrent(i)}
                       className={cn(
                         'rounded-full transition-all',

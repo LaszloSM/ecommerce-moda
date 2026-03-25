@@ -31,6 +31,16 @@ interface DataTableProps<T extends Record<string, unknown>> {
 
 type SortDir = 'asc' | 'desc' | null
 
+// Defined outside DataTable to avoid re-creation on each render
+type Column<T> = ColumnDef<T>
+
+function SortIcon<T>({ col, sortKey, sortDir }: { col: Column<T>; sortKey: keyof T | null; sortDir: SortDir }) {
+  if (!col.sortable) return null
+  if (sortKey !== col.key) return <ChevronsUpDown className="w-3.5 h-3.5 opacity-40" />
+  if (sortDir === 'asc') return <ChevronUp className="w-3.5 h-3.5 text-violet-300" />
+  return <ChevronDown className="w-3.5 h-3.5 text-violet-300" />
+}
+
 export function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
@@ -68,20 +78,10 @@ export function DataTable<T extends Record<string, unknown>>({
 
   const handleSort = (col: ColumnDef<T>) => {
     if (!col.sortable) return
-    setSortDir((prev) => {
-      if (sortKey !== col.key) { setSortKey(col.key); return 'asc' }
-      if (prev === 'asc') return 'desc'
-      setSortKey(null)
-      return null
-    })
-    if (sortKey !== col.key) setSortKey(col.key)
-  }
-
-  const SortIcon = ({ col }: { col: ColumnDef<T> }) => {
-    if (!col.sortable) return null
-    if (sortKey !== col.key) return <ChevronsUpDown className="w-3.5 h-3.5 opacity-40" />
-    if (sortDir === 'asc') return <ChevronUp className="w-3.5 h-3.5 text-violet-300" />
-    return <ChevronDown className="w-3.5 h-3.5 text-violet-300" />
+    const isCurrentCol = sortKey === col.key
+    const nextDir = isCurrentCol && sortDir === 'asc' ? 'desc' : 'asc'
+    setSortKey(col.key)
+    setSortDir(nextDir)
   }
 
   const pages = React.useMemo(() => {
@@ -165,7 +165,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 >
                   <div className="flex items-center gap-1">
                     {col.header}
-                    <SortIcon col={col} />
+                    <SortIcon col={col} sortKey={sortKey} sortDir={sortDir} />
                   </div>
                 </th>
               ))}
