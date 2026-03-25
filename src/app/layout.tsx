@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Inter } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
+import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -37,8 +39,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
-      <body>
-        {children}
+      <body className="gradient-bg min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
         <Toaster position="top-right" richColors />
       </body>
     </html>
