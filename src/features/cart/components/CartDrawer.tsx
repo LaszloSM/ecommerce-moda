@@ -22,10 +22,9 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
-  const { items, removeItem, updateQuantity } = useCartStore()
+  const { items, storeName, removeItem, updateQuantity, getTotal } = useCartStore()
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const storeName = items[0]?.storeName
+  const subtotal = getTotal()
 
   return (
     <Sheet open={open} onOpenChange={(o) => { if (!o) onClose() }}>
@@ -83,7 +82,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               <div className="space-y-3">
                 {items.map((item) => (
                   <div
-                    key={item.id}
+                    key={`${item.productId}-${item.variantId ?? ''}`}
                     className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/8"
                   >
                     <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-white/5">
@@ -101,15 +100,11 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <Link
-                        href={`/producto/${item.slug}`}
-                        onClick={onClose}
-                        className="text-sm font-medium text-white hover:text-violet-300 transition-colors line-clamp-2"
-                      >
+                      <p className="text-sm font-medium text-white line-clamp-2">
                         {item.name}
-                      </Link>
-                      {item.variant && (
-                        <p className="text-xs text-white/40 mt-0.5">{item.variant}</p>
+                      </p>
+                      {item.variantId && (
+                        <p className="text-xs text-white/40 mt-0.5">Variante: {item.variantId}</p>
                       )}
 
                       <div className="flex items-center justify-between mt-2">
@@ -119,7 +114,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                             type="button"
                             variant="ghost"
                             size="icon"
-                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                            onClick={() => updateQuantity(item.productId, item.variantId, Math.max(1, item.quantity - 1))}
                             disabled={item.quantity <= 1}
                             className="h-7 w-7 text-white/60 hover:text-white hover:bg-white/10"
                           >
@@ -132,7 +127,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                             type="button"
                             variant="ghost"
                             size="icon"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
                             className="h-7 w-7 text-white/60 hover:text-white hover:bg-white/10"
                           >
                             <Plus className="w-3 h-3" />
@@ -147,7 +142,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                             type="button"
                             variant="ghost"
                             size="icon"
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.productId, item.variantId)}
                             className="h-7 w-7 text-white/30 hover:text-red-400 hover:bg-red-400/10"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
