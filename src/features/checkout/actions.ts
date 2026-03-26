@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import type { CartItem } from '@/features/cart/store'
+import { sendOrderConfirmedEmail } from '@/lib/email/send'
 
 interface CreateOrderInput {
   items: CartItem[]
@@ -97,6 +98,35 @@ export async function createOrder(input: CreateOrderInput) {
       // Don't fail the order, but log it — stock sync can be done manually
       console.error('Stock decrement failed for product', item.productId, stockError.message)
     }
+  }
+
+  // Send confirmation email (non-blocking — don't fail order if email fails)
+  try {
+    const { data: { user: fullUser } } = await supabase.auth.getUser()
+    if (fullUser?.email) {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+      await sendOrderConfirmedEmail({
+        to: fullUser.email,
+        buyerName: input.shippingAddress.fullName,
+        orderId: order.id,
+        orderItems: input.items.map(item => ({
+          product_name: item.name,
+          product_image: item.image,
+          price: item.price,
+          quantity: item.quantity,
+          subtotal: item.price * item.quantity,
+        })),
+        subtotal,
+        discountAmount,
+        shippingCost,
+        total,
+        shippingAddress: input.shippingAddress,
+        storeName: input.items[0].storeName,
+        orderUrl: `${siteUrl}/cuenta/pedidos/${order.id}`,
+      })
+    }
+  } catch (emailError) {
+    console.error('Order confirmation email failed:', emailError)
   }
 
   revalidatePath('/cuenta/pedidos')
