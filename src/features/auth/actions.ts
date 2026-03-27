@@ -14,7 +14,7 @@ export async function signIn(data: LoginInput) {
   })
   if (error) return { error: error.message }
   revalidatePath('/', 'layout')
-  redirect('/')
+  return { success: true }
 }
 
 export async function signUp(data: RegisterInput) {
@@ -32,9 +32,10 @@ export async function signUp(data: RegisterInput) {
   if (authData.user) {
     const admin = createAdminClient()
 
-    // Auto-confirm email so users can login immediately (no SMTP required)
+    // Auto-confirm email and set default role in JWT claims
     await admin.auth.admin.updateUserById(authData.user.id, {
       email_confirm: true,
+      app_metadata: { role: 'buyer' },
     })
 
     // Upsert profile bypassing RLS
@@ -53,7 +54,7 @@ export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
-  redirect('/login')
+  return { success: true }
 }
 
 export async function resetPassword(data: ResetPasswordInput) {

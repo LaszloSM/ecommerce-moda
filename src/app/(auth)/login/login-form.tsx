@@ -24,7 +24,11 @@ export default function LoginForm() {
     setError(null)
     startTransition(async () => {
       const result = await signIn(data)
-      if (result?.error) setError(result.error)
+      if (result?.error) {
+        setError(result.error)
+      } else {
+        window.location.href = '/'
+      }
     })
   }
 
