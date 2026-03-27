@@ -9,7 +9,6 @@ import {
   Truck,
   RotateCcw,
   ShieldCheck,
-  MessageSquare,
 } from 'lucide-react'
 import { getProductBySlug, getProductRating } from '@/features/catalog/actions'
 import { ProductGallery } from '@/features/catalog/components/ProductGallery'
@@ -17,6 +16,7 @@ import { AddToCartButton } from '@/features/catalog/components/AddToCartButton'
 import { RatingStars } from '@/components/ui/rating-stars'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { ReviewList } from '@/features/reviews/components/ReviewList'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -256,12 +256,16 @@ export default async function ProductPage({ params }: PageProps) {
           </TabsContent>
 
           <TabsContent value="resenas">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center py-16 gap-4">
-              <MessageSquare className="w-12 h-12 text-violet-400/40" />
-              <p className="text-white/50 text-lg font-medium">Reseñas próximamente</p>
-              <p className="text-white/30 text-sm text-center max-w-sm">
-                El sistema de reseñas estará disponible muy pronto. ¡Sé el primero en opinar!
-              </p>
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 space-y-6">
+              <ReviewList productId={product.id} />
+              <div className="border-t border-white/10 pt-4 text-center">
+                <p className="text-white/50 text-sm">
+                  ¿Compraste este producto?{' '}
+                  <Link href="/cuenta/pedidos" className="text-violet-400 hover:text-violet-300 underline">
+                    Deja tu reseña desde Mis Pedidos
+                  </Link>
+                </p>
+              </div>
             </div>
           </TabsContent>
 
