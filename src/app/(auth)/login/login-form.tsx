@@ -85,12 +85,12 @@ export default function LoginForm() {
         </form>
       </CardContent>
       <CardFooter className="flex flex-col space-y-2 text-center">
-        <Link href="/auth/recuperar" className="text-sm text-violet-400 hover:text-violet-300">
+        <Link href="/recuperar" className="text-sm text-violet-400 hover:text-violet-300">
           ¿Olvidaste tu contraseña?
         </Link>
         <p className="text-sm text-white/60">
           ¿No tienes cuenta?{' '}
-          <Link href="/auth/registro" className="text-violet-400 hover:text-violet-300 font-medium">
+          <Link href="/registro" className="text-violet-400 hover:text-violet-300 font-medium">
             Regístrate
           </Link>
         </p>

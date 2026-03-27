@@ -61,7 +61,7 @@ export default function RecuperarForm() {
           </Button>
         </form>
         <div className="mt-4 text-center">
-          <Link href="/auth/login" className="inline-flex items-center text-sm text-violet-400 hover:text-violet-300">
+          <Link href="/login" className="inline-flex items-center text-sm text-violet-400 hover:text-violet-300">
             <ArrowLeft className="mr-1 h-3 w-3" />
             Volver al login
           </Link>

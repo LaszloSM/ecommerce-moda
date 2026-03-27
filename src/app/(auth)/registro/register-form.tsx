@@ -36,7 +36,7 @@ export default function RegisterForm() {
         <CardContent className="pt-6 text-center space-y-4">
           <CheckCircle className="mx-auto h-12 w-12 text-green-400" />
           <p className="text-white/80">{success}</p>
-          <Link href="/auth/login" className="text-violet-400 hover:underline text-sm">
+          <Link href="/login" className="text-violet-400 hover:underline text-sm">
             Volver al login
           </Link>
         </CardContent>
@@ -107,7 +107,7 @@ export default function RegisterForm() {
       <CardFooter className="text-center">
         <p className="text-sm text-white/60 w-full">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/auth/login" className="text-violet-400 hover:text-violet-300 font-medium">
+          <Link href="/login" className="text-violet-400 hover:text-violet-300 font-medium">
             Inicia sesión
           </Link>
         </p>

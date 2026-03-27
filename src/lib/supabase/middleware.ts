@@ -42,7 +42,7 @@ export async function updateSession(request: NextRequest) {
     url.pathname.startsWith('/checkout')
 
   if (isProtectedRoute && !user) {
-    url.pathname = '/auth/login'
+    url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
