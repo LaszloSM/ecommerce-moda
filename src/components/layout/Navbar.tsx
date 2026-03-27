@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { Search, ShoppingBag, Menu, User, LogOut, Package, ChevronDown } from 'lucide-react'
+import { Search, ShoppingBag, Menu, User, LogOut, Package, ChevronDown, LayoutDashboard, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -23,7 +23,6 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { useCartStore } from '@/features/cart/store'
 import { CartDrawer } from '@/features/cart/components/CartDrawer'
-import { signOut } from '@/features/auth/actions'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 
@@ -40,20 +39,46 @@ export default function Navbar() {
   const cartCount = items.reduce((sum, item) => sum + (item.quantity ?? 1), 0)
 
   const [user, setUser] = React.useState<{ email?: string; id?: string } | null>(null)
+  const [role, setRole] = React.useState<string | null>(null)
   const [cartOpen, setCartOpen] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
+  async function fetchRole(userId: string) {
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single()
+    setRole(data?.role ?? 'buyer')
+  }
+
   React.useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      if (data.user) fetchRole(data.user.id)
+    })
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) {
+        fetchRole(session.user.id)
+      } else {
+        setRole(null)
+      }
     })
     return () => subscription.unsubscribe()
   }, [])
 
+  async function handleSignOut() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    window.location.href = '/login'
+  }
+
+  const isSeller = role === 'seller'
   const userInitial = user?.email ? user.email[0].toUpperCase() : 'U'
 
   return (
@@ -171,17 +196,38 @@ export default function Navbar() {
                         Mis Pedidos
                       </Link>
                     </DropdownMenuItem>
+                    {isSeller && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          <Link
+                            href="/dashboard"
+                            className="flex items-center gap-2 w-full text-violet-300 hover:text-violet-200"
+                          >
+                            <LayoutDashboard className="h-4 w-4" />
+                            Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-2 w-full text-violet-300 hover:text-violet-200"
+                          >
+                            <ShieldCheck className="h-4 w-4" />
+                            Administración
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
-                      <form action={signOut} className="w-full">
-                        <button
-                          type="submit"
-                          className="flex w-full items-center gap-2 text-red-400 hover:text-red-300"
-                        >
-                          <LogOut className="h-4 w-4" />
-                          Cerrar Sesión
-                        </button>
-                      </form>
+                      <button
+                        onClick={handleSignOut}
+                        className="flex w-full items-center gap-2 text-red-400 hover:text-red-300"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Cerrar Sesión
+                      </button>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -266,15 +312,35 @@ export default function Navbar() {
                           <Package className="h-4 w-4" />
                           Mis Pedidos
                         </Link>
-                        <form action={signOut}>
-                          <button
-                            type="submit"
-                            className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors"
-                          >
-                            <LogOut className="h-4 w-4" />
-                            Cerrar Sesión
-                          </button>
-                        </form>
+                        {isSeller && (
+                          <>
+                            <Separator className="bg-white/10" />
+                            <Link
+                              href="/dashboard"
+                              onClick={() => setMobileOpen(false)}
+                              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-violet-300 hover:text-violet-200 hover:bg-violet-500/10 transition-colors"
+                            >
+                              <LayoutDashboard className="h-4 w-4" />
+                              Dashboard
+                            </Link>
+                            <Link
+                              href="/admin"
+                              onClick={() => setMobileOpen(false)}
+                              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-violet-300 hover:text-violet-200 hover:bg-violet-500/10 transition-colors"
+                            >
+                              <ShieldCheck className="h-4 w-4" />
+                              Administración
+                            </Link>
+                          </>
+                        )}
+                        <Separator className="bg-white/10" />
+                        <button
+                          onClick={handleSignOut}
+                          className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Cerrar Sesión
+                        </button>
                       </div>
                     ) : (
                       <Link href="/login" onClick={() => setMobileOpen(false)}>

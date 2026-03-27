@@ -46,5 +46,18 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Role guard: /dashboard requires seller role
+  if (user && url.pathname.startsWith('/dashboard')) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    if (profile?.role !== 'seller') {
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+  }
+
   return supabaseResponse
 }

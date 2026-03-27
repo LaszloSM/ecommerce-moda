@@ -1,5 +1,6 @@
 import { getAllUsers } from '@/features/admin/actions'
 import { ToggleUserButton } from '@/features/admin/components/ToggleUserButton'
+import { ChangeRoleButton } from '@/features/admin/components/ChangeRoleButton'
 
 export default async function UsuariosPage() {
   const users = await getAllUsers()
@@ -66,7 +67,10 @@ export default async function UsuariosPage() {
                       })}
                     </td>
                     <td className="px-4 py-3">
-                      <ToggleUserButton userId={user.id} isActive={user.is_active !== false} />
+                      <div className="flex items-center gap-2">
+                        <ChangeRoleButton userId={user.id} currentRole={user.role ?? 'buyer'} />
+                        <ToggleUserButton userId={user.id} isActive={user.is_active !== false} />
+                      </div>
                     </td>
                   </tr>
                 ))

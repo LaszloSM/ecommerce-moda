@@ -1,5 +1,6 @@
 'use server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function getAllUsers(limit = 50) {
   const supabase = await createClient()
@@ -45,6 +46,17 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
     .update({ is_active: isActive })
     .eq('id', userId)
   return error ? { error: (error as any).message } : { success: true }
+}
+
+export async function changeUserRole(userId: string, role: 'buyer' | 'seller') {
+  const admin = createAdminClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin.from('profiles') as any)
+    .update({ role })
+    .eq('id', userId)
+  if (error) return { error: (error as any).message }
+  await admin.auth.admin.updateUserById(userId, { app_metadata: { role } })
+  return { success: true }
 }
 
 export async function toggleStoreActive(storeId: string, isActive: boolean) {

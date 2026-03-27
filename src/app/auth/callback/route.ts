@@ -29,6 +29,14 @@ export async function GET(request: NextRequest) {
         full_name: sessionData.user.user_metadata?.full_name ?? sessionData.user.email ?? '',
         avatar_url: sessionData.user.user_metadata?.avatar_url ?? null,
       }, { onConflict: 'id' })
+
+      // Set role in JWT claims if not already set (e.g. new Google OAuth users)
+      if (!sessionData.user.app_metadata?.role) {
+        await admin.auth.admin.updateUserById(sessionData.user.id, {
+          app_metadata: { role: 'buyer' },
+        })
+      }
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
