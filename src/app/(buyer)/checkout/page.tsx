@@ -15,9 +15,11 @@ import { useCartStore } from '@/features/cart/store'
 import { CouponInput } from '@/features/checkout/components/CouponInput'
 import { addressSchema, type AddressFormValues } from '@/features/checkout/validators'
 import { createOrder, validateCoupon } from '@/features/checkout/actions'
+import { WompiCardForm } from '@/components/checkout/WompiCardForm'
+import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 
-type Step = 1 | 2
+type Step = 1 | 2 | 3
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -28,6 +30,8 @@ export default function CheckoutPage() {
   const [couponId, setCouponId] = React.useState<string | undefined>()
   const [discountAmount, setDiscountAmount] = React.useState(0)
   const [couponCode, setCouponCode] = React.useState<string | undefined>()
+  const [pendingOrderId, setPendingOrderId] = React.useState<string | null>(null)
+  const [customerEmail, setCustomerEmail] = React.useState<string>('')
 
   const subtotal = getTotal()
   const shippingCost = 0
@@ -53,6 +57,14 @@ export default function CheckoutPage() {
       router.replace('/carrito')
     }
   }, [items.length, router])
+
+  // Fetch customer email for Wompi payment
+  React.useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.email) setCustomerEmail(data.user.email)
+    })
+  }, [])
 
   const handleAddressSubmit = form.handleSubmit(() => {
     setStep(2)
@@ -95,14 +107,20 @@ export default function CheckoutPage() {
         return
       }
       if ('orderId' in result && result.orderId) {
-        clearCart()
-        router.push(`/checkout/exito/${result.orderId}`)
+        // Instead of redirecting, go to step 3 for payment
+        setPendingOrderId(result.orderId)
+        setStep(3)
       }
     } catch {
       setOrderError('Ocurrió un error inesperado. Intenta de nuevo.')
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handlePaymentSuccess = (transactionId: string) => {
+    clearCart()
+    router.push(`/checkout/exito/${pendingOrderId}`)
   }
 
   if (items.length === 0) return null
@@ -115,6 +133,13 @@ export default function CheckoutPage() {
           {step === 2 ? (
             <button
               onClick={() => setStep(1)}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          ) : step === 3 ? (
+            <button
+              onClick={() => setStep(2)}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -135,8 +160,8 @@ export default function CheckoutPage() {
 
         {/* Stepper */}
         <div className="flex items-center gap-3 mb-8">
-          {([1, 2] as Step[]).map((s, idx) => {
-            const labels = ['Dirección', 'Pedido']
+          {([1, 2, 3] as Step[]).map((s, idx) => {
+            const labels = ['Dirección', 'Pedido', 'Pago']
             const isActive = step === s
             const isDone = step > s
             return (
@@ -398,6 +423,28 @@ export default function CheckoutPage() {
             >
               Volver a dirección de envío
             </button>
+          </div>
+        )}
+
+        {/* Step 3: Payment */}
+        {step === 3 && pendingOrderId && (
+          <div
+            className={cn(
+              'rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6',
+              'shadow-[0_4px_32px_0_rgba(124,58,237,0.12)]',
+            )}
+          >
+            <div className="flex items-center gap-2 mb-6">
+              <ShoppingBag className="w-5 h-5 text-violet-400" />
+              <h2 className="text-lg font-semibold text-white">Pago</h2>
+            </div>
+
+            <WompiCardForm
+              orderId={pendingOrderId}
+              amountCOP={total}
+              customerEmail={customerEmail}
+              onSuccess={handlePaymentSuccess}
+            />
           </div>
         )}
       </div>
