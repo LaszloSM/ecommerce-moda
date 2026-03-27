@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -17,8 +18,17 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const supabase = await createClient()
-    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
-    if (!exchangeError) {
+    const { data: sessionData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+    if (!exchangeError && sessionData.user) {
+      // Ensure profile exists (covers Google OAuth and email confirmation)
+      const admin = createAdminClient()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (admin.from('profiles') as any).upsert({
+        id: sessionData.user.id,
+        email: sessionData.user.email ?? '',
+        full_name: sessionData.user.user_metadata?.full_name ?? sessionData.user.email ?? '',
+        avatar_url: sessionData.user.user_metadata?.avatar_url ?? null,
+      }, { onConflict: 'id' })
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

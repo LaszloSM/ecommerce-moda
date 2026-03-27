@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import type { LoginInput, RegisterInput, ResetPasswordInput } from './validators'
 
 export async function signIn(data: LoginInput) {
@@ -18,7 +19,7 @@ export async function signIn(data: LoginInput) {
 
 export async function signUp(data: RegisterInput) {
   const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
+  const { data: authData, error } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
     options: {
@@ -27,6 +28,18 @@ export async function signUp(data: RegisterInput) {
     },
   })
   if (error) return { error: error.message }
+
+  // Insert profile with admin client (bypasses RLS)
+  if (authData.user) {
+    const admin = createAdminClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin.from('profiles') as any).upsert({
+      id: authData.user.id,
+      email: authData.user.email ?? data.email,
+      full_name: data.full_name,
+    }, { onConflict: 'id' })
+  }
+
   return { success: 'Revisa tu email para confirmar tu cuenta.' }
 }
 
