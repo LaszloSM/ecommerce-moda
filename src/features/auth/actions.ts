@@ -29,9 +29,15 @@ export async function signUp(data: RegisterInput) {
   })
   if (error) return { error: error.message }
 
-  // Insert profile with admin client (bypasses RLS)
   if (authData.user) {
     const admin = createAdminClient()
+
+    // Auto-confirm email so users can login immediately (no SMTP required)
+    await admin.auth.admin.updateUserById(authData.user.id, {
+      email_confirm: true,
+    })
+
+    // Upsert profile bypassing RLS
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (admin.from('profiles') as any).upsert({
       id: authData.user.id,
@@ -40,7 +46,7 @@ export async function signUp(data: RegisterInput) {
     }, { onConflict: 'id' })
   }
 
-  return { success: 'Revisa tu email para confirmar tu cuenta.' }
+  return { success: '¡Cuenta creada! Ya puedes iniciar sesión.' }
 }
 
 export async function signOut() {
