@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { type Database } from '@/lib/types/database'
+import { type Database, type UserRole } from '@/lib/types/database'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -36,14 +36,27 @@ export async function updateSession(request: NextRequest) {
   // Protect routes
   const url = request.nextUrl.clone()
   const isProtectedRoute =
-    url.pathname.startsWith('/dashboard') ||
-    url.pathname.startsWith('/admin') ||
+    url.pathname.startsWith('/panel') ||
     url.pathname.startsWith('/cuenta') ||
     url.pathname.startsWith('/checkout')
 
   if (isProtectedRoute && !user) {
     url.pathname = '/login'
     return NextResponse.redirect(url)
+  }
+
+  // Protect /panel for admin role only
+  if (url.pathname.startsWith('/panel') && user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single() as { data: { role: UserRole } | null; error: unknown }
+
+    if (!profile || profile.role !== 'admin') {
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

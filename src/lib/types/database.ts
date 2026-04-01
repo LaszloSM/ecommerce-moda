@@ -15,7 +15,7 @@ export type Database = {
           full_name: string | null
           avatar_url: string | null
           phone: string | null
-          role: 'buyer' | 'seller' | 'admin'
+          role: 'buyer' | 'admin'
           created_at: string
         }
         Insert: {
@@ -23,7 +23,7 @@ export type Database = {
           full_name?: string | null
           avatar_url?: string | null
           phone?: string | null
-          role?: 'buyer' | 'seller' | 'admin'
+          role?: 'buyer' | 'admin'
           created_at?: string
         }
         Update: {
@@ -31,7 +31,7 @@ export type Database = {
           full_name?: string | null
           avatar_url?: string | null
           phone?: string | null
-          role?: 'buyer' | 'seller' | 'admin'
+          role?: 'buyer' | 'admin'
           created_at?: string
         }
       }
@@ -69,6 +69,57 @@ export type Database = {
           is_active?: boolean
           created_at?: string
         }
+      }
+      company_config: {
+        Row: {
+          id: string
+          name: string
+          tagline: string | null
+          logo_url: string | null
+          banner_urls: string[]
+          email: string | null
+          phone: string | null
+          address: string | null
+          city: string | null
+          nit: string | null
+          social_links: Record<string, string>
+          shipping_methods: Array<{ name: string; price: number; days: string }>
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name?: string
+          tagline?: string | null
+          logo_url?: string | null
+          banner_urls?: string[]
+          email?: string | null
+          phone?: string | null
+          address?: string | null
+          city?: string | null
+          nit?: string | null
+          social_links?: Record<string, string>
+          shipping_methods?: Array<{ name: string; price: number; days: string }>
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          tagline?: string | null
+          logo_url?: string | null
+          banner_urls?: string[]
+          email?: string | null
+          phone?: string | null
+          address?: string | null
+          city?: string | null
+          nit?: string | null
+          social_links?: Record<string, string>
+          shipping_methods?: Array<{ name: string; price: number; days: string }>
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       categories: {
         Row: {
@@ -491,6 +542,7 @@ export type InsertTables<T extends keyof Database['public']['Tables']> = Databas
 export type UpdateTables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
 
 export type Profile = Tables<'profiles'>
+export type CompanyConfig = Tables<'company_config'>
 export type Store = Tables<'stores'>
 export type Category = Tables<'categories'>
 export type Product = Tables<'products'>
