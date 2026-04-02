@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { Search, ShoppingBag, Menu, User, LogOut, Package, ChevronDown } from 'lucide-react'
+import { Search, ShoppingBag, Menu, User, LogOut, Package, ChevronDown, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -40,16 +40,29 @@ export default function Navbar() {
   const cartCount = items.reduce((sum, item) => sum + (item.quantity ?? 1), 0)
 
   const [user, setUser] = React.useState<{ email?: string; id?: string } | null>(null)
+  const [isAdmin, setIsAdmin] = React.useState(false)
   const [cartOpen, setCartOpen] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
   React.useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      if (data.user) {
+        supabase.from('profiles').select('role').eq('id', data.user.id).single()
+          .then(({ data: p }) => setIsAdmin((p as any)?.role === 'admin'))
+      }
+    })
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) {
+        supabase.from('profiles').select('role').eq('id', session.user.id).single()
+          .then(({ data: p }) => setIsAdmin((p as any)?.role === 'admin'))
+      } else {
+        setIsAdmin(false)
+      }
     })
     return () => subscription.unsubscribe()
   }, [])
@@ -171,6 +184,17 @@ export default function Navbar() {
                         Mis Pedidos
                       </Link>
                     </DropdownMenuItem>
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          <Link href="/panel" className="flex items-center gap-2 w-full text-violet-400 hover:text-violet-300">
+                            <Settings className="h-4 w-4" />
+                            Panel Admin
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <form action={signOut} className="w-full">
@@ -266,6 +290,13 @@ export default function Navbar() {
                           <Package className="h-4 w-4" />
                           Mis Pedidos
                         </Link>
+                        {isAdmin && (
+                          <Link href="/panel" onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-violet-400 hover:text-violet-300 hover:bg-violet-400/10 transition-colors">
+                            <Settings className="h-4 w-4" />
+                            Panel Admin
+                          </Link>
+                        )}
                         <form action={signOut}>
                           <button
                             type="submit"

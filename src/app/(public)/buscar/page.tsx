@@ -64,9 +64,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
             {products.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
-                {products.map((product) => {
-                  const store = product.stores as { name: string; slug: string } | null
-                  return (
+                {products.map((product) => (
                     <ProductCard
                       key={product.id}
                       id={product.id}
@@ -75,11 +73,8 @@ export default async function SearchPage({ searchParams }: PageProps) {
                       price={product.price}
                       comparePrice={product.compare_price ?? undefined}
                       images={product.images ?? []}
-                      storeName={store?.name}
-                      storeSlug={store?.slug}
                     />
-                  )
-                })}
+                ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-24 text-white/40">

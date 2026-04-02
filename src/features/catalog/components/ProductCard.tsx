@@ -16,8 +16,6 @@ interface ProductCardProps {
   images: string[]
   rating?: number
   reviewCount?: number
-  storeName?: string
-  storeSlug?: string
   isNew?: boolean
   onAddToCart?: () => void
 }
@@ -31,8 +29,6 @@ export function ProductCard({
   images,
   rating = 0,
   reviewCount = 0,
-  storeName,
-  storeSlug,
   isNew,
   onAddToCart,
 }: ProductCardProps) {
@@ -101,19 +97,6 @@ export function ProductCard({
           <h3 className="text-sm font-semibold text-white leading-snug group-hover:text-violet-300 transition-colors line-clamp-2">
             {name}
           </h3>
-
-          {/* Store */}
-          {storeName && (
-            <p className="text-xs text-white/40">
-              {storeSlug ? (
-                <Link href={`/tienda/${storeSlug}`} className="hover:text-violet-300 transition-colors">
-                  {storeName}
-                </Link>
-              ) : (
-                storeName
-              )}
-            </p>
-          )}
 
           {/* Price */}
           <div className="flex items-baseline gap-2 pt-1">

@@ -127,9 +127,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           <div className="flex-1">
             {products.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
-                {products.map((product) => {
-                  const store = product.stores as { name: string; slug: string } | null
-                  return (
+                {products.map((product) => (
                     <ProductCard
                       key={product.id}
                       id={product.id}
@@ -138,11 +136,8 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
                       price={product.price}
                       comparePrice={product.compare_price ?? undefined}
                       images={product.images ?? []}
-                      storeName={store?.name}
-                      storeSlug={store?.slug}
                     />
-                  )
-                })}
+                ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-32 text-white/40">

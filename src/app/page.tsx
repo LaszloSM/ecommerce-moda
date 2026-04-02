@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Shirt, User, Watch, ShoppingBag, Dumbbell, ArrowRight, Store } from 'lucide-react'
+import { Shirt, User, Watch, ShoppingBag, Dumbbell, ArrowRight } from 'lucide-react'
 import { getFeaturedProducts } from '@/features/catalog/actions'
 import { ProductCard } from '@/features/catalog/components/ProductCard'
 
@@ -85,13 +85,6 @@ export default async function HomePage() {
               Ver colección
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold text-base hover:bg-white/15 transition-all duration-200"
-            >
-              <Store className="w-4 h-4" />
-              Crear tienda
-            </Link>
           </div>
         </div>
 
@@ -140,7 +133,7 @@ export default async function HomePage() {
               <p className="text-white/50 text-base">Selección especial de lo mejor</p>
             </div>
             <Link
-              href="/categoria/mujer"
+              href="/catalogo"
               className="hidden sm:inline-flex items-center gap-1.5 text-violet-400 hover:text-violet-300 text-sm font-medium transition-colors"
             >
               Ver todos
@@ -150,9 +143,7 @@ export default async function HomePage() {
 
           {featuredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
-              {featuredProducts.map((product) => {
-                const store = product.stores as { name: string; slug: string } | null
-                return (
+              {featuredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     id={product.id}
@@ -161,11 +152,8 @@ export default async function HomePage() {
                     price={product.price}
                     comparePrice={product.compare_price ?? undefined}
                     images={product.images ?? []}
-                    storeName={store?.name}
-                    storeSlug={store?.slug}
                   />
-                )
-              })}
+              ))}
             </div>
           ) : (
             <div className="text-center py-20 text-white/40">
@@ -176,36 +164,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Banner CTA ── */}
-      <section className="py-20 px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="relative overflow-hidden rounded-3xl bg-white/5 backdrop-blur-xl border border-white/15 p-12 text-center shadow-[0_8px_48px_0_rgba(124,58,237,0.25)]">
-            {/* Background glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 to-fuchsia-600/10 pointer-events-none" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-violet-400/60 to-transparent" />
-
-            <div className="relative z-10">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-violet-600/20 border border-violet-400/30 mb-6">
-                <Store className="w-8 h-8 text-violet-300" />
-              </div>
-              <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-4">
-                ¿Tienes una tienda?
-              </h2>
-              <p className="text-white/60 text-lg max-w-md mx-auto mb-8 leading-relaxed">
-                Únete a Modavida y lleva tu negocio al siguiente nivel. Vende a miles de clientes
-                apasionados por la moda.
-              </p>
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-2 px-10 py-4 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all duration-200 shadow-lg shadow-violet-900/50"
-              >
-                Empezar ahora
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

@@ -1,13 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Tables } from '@/lib/types/database'
 
-// Lightweight product shape returned by list queries (includes store join)
+// Lightweight product shape returned by list queries
 export type ProductListItem = Pick<
   Tables<'products'>,
   'id' | 'name' | 'slug' | 'price' | 'compare_price' | 'images' | 'store_id'
-> & {
-  stores: { name: string; slug: string } | null
-}
+>
 
 // Full product with relations
 export type ProductDetail = Tables<'products'> & {
@@ -21,7 +19,7 @@ export async function getFeaturedProducts(limit = 8): Promise<ProductListItem[]>
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
-    .select('id, name, slug, price, compare_price, images, store_id, stores(name, slug)')
+    .select('id, name, slug, price, compare_price, images, store_id')
     .eq('is_active', true)
     .eq('is_featured', true)
     .limit(limit)
