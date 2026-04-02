@@ -1,0 +1,73 @@
+<h2>Diseño: Panel Administrador</h2>
+<p class="subtitle">Sección 3 de 3 — Layout y funcionalidades del panel</p>
+
+<div class="mockup" style="margin-top:1rem">
+  <div class="mockup-header">Vista general del panel /panel</div>
+  <div class="mockup-body" style="display:flex;gap:0;padding:0;min-height:320px">
+
+    <!-- Sidebar -->
+    <div style="width:200px;background:#0f0f1a;border-right:1px solid #2d2d4e;padding:1rem;flex-shrink:0">
+      <div style="font-weight:700;color:#a78bfa;margin-bottom:1.5rem;font-size:0.9rem">⚡ MODAVIDA Admin</div>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">Principal</div>
+      <div style="padding:0.4rem 0.6rem;background:#4c1d95;border-radius:4px;color:#fff;font-size:0.82rem;margin-bottom:0.3rem">📊 Dashboard</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem;margin-bottom:0.3rem">📦 Productos</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem;margin-bottom:0.3rem">🏷️ Categorías</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem;margin-bottom:0.3rem">🛒 Pedidos</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem;margin-bottom:0.3rem">👥 Clientes</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem;margin-bottom:0.3rem">📉 Inventario</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem;margin-bottom:0.3rem">🎟️ Promociones</div>
+      <div style="padding:0.4rem 0.6rem;color:#9ca3af;font-size:0.82rem">⚙️ Configuración</div>
+    </div>
+
+    <!-- Main content -->
+    <div style="flex:1;padding:1.2rem;background:#0a0a14">
+      <div style="font-size:0.9rem;font-weight:600;color:#e5e7eb;margin-bottom:1rem">Dashboard — Resumen del negocio</div>
+
+      <!-- Metric cards -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:1rem">
+        <div style="background:#1a1a2e;padding:0.7rem;border-radius:6px;border:1px solid #2d2d4e">
+          <div style="font-size:0.7rem;color:#9ca3af">Ventas hoy</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#a78bfa">$485.000</div>
+        </div>
+        <div style="background:#1a1a2e;padding:0.7rem;border-radius:6px;border:1px solid #2d2d4e">
+          <div style="font-size:0.7rem;color:#9ca3af">Pedidos pendientes</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#fbbf24">12</div>
+        </div>
+        <div style="background:#1a1a2e;padding:0.7rem;border-radius:6px;border:1px solid #2d2d4e">
+          <div style="font-size:0.7rem;color:#9ca3af">Clientes totales</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#34d399">248</div>
+        </div>
+        <div style="background:#1a1a2e;padding:0.7rem;border-radius:6px;border:1px solid #ef4444;background:#1a0a0a">
+          <div style="font-size:0.7rem;color:#ef4444">⚠️ Stock bajo</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#ef4444">5 productos</div>
+        </div>
+      </div>
+
+      <!-- Chart placeholder -->
+      <div style="background:#1a1a2e;border-radius:6px;border:1px solid #2d2d4e;padding:0.8rem;height:100px;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:0.8rem">
+        📈 Gráfico ventas últimos 30 días (COP)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem">
+  <div style="background:#1a1a2e;border-radius:6px;padding:0.8rem;border:1px solid #2d2d4e">
+    <div style="font-size:0.8rem;font-weight:600;color:#a78bfa;margin-bottom:0.4rem">📦 Productos</div>
+    <div style="font-size:0.75rem;color:#9ca3af">Crear, editar, activar/desactivar. Imágenes múltiples. Variantes (talla/color). Stock y precio COP.</div>
+  </div>
+  <div style="background:#1a1a2e;border-radius:6px;padding:0.8rem;border:1px solid #2d2d4e">
+    <div style="font-size:0.8rem;font-weight:600;color:#a78bfa;margin-bottom:0.4rem">🛒 Pedidos</div>
+    <div style="font-size:0.75rem;color:#9ca3af">Ver todos los pedidos. Cambiar estado (pendiente→enviado→entregado). Ver detalle. Número de tracking.</div>
+  </div>
+  <div style="background:#1a1a2e;border-radius:6px;padding:0.8rem;border:1px solid #2d2d4e">
+    <div style="font-size:0.8rem;font-weight:600;color:#a78bfa;margin-bottom:0.4rem">📉 Inventario</div>
+    <div style="font-size:0.75rem;color:#9ca3af">Lista productos con stock bajo. Alerta configurable (ej: &lt;5 unidades). Actualización rápida de stock.</div>
+  </div>
+  <div style="background:#1a1a2e;border-radius:6px;padding:0.8rem;border:1px solid #2d2d4e">
+    <div style="font-size:0.8rem;font-weight:600;color:#a78bfa;margin-bottom:0.4rem">⚙️ Configuración</div>
+    <div style="font-size:0.75rem;color:#9ca3af">Nombre empresa, NIT, logo, banners del home, redes sociales, métodos de envío y política de pagos.</div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem">¿Este panel admin se ve completo? Responde en terminal.</p>

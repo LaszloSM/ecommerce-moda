@@ -1,5 +1,36 @@
 @AGENTS.md
 
+# MODAVIDA — Tienda Única E-commerce (Colombia)
+
+## Arquitectura
+- Tienda única, NO marketplace. Roles: `buyer` | `admin` (sin `seller`)
+- Admin accede en `/panel/**` (NO `/dashboard` ni `/admin`)
+- Next.js 16: usa `proxy.ts` — NUNCA crear `middleware.ts` (rompe el build)
+- Tailwind CSS v4: config en `globals.css` con `@theme inline` — NO `tailwind.config.js`
+- Params en Next.js 16 son async: `const { id } = await params`
+
+## Supabase
+- Cliente servidor: `src/lib/supabase/server.ts` | cliente admin (bypasa RLS): `src/lib/supabase/admin.ts`
+- Usar `(supabase as any).from(...)` para queries con joins o columnas sin tipos exactos
+- `.select('role').single()` devuelve `never` — castear: `as { data: { role: string } | null }`
+- `moddatetime` extension no disponible — usar función custom `set_updated_at()`
+- RLS activo en todas las tablas; acciones admin usan `createAdminClient()` si el trigger falla
+
+## Acciones del servidor
+- Todas las acciones admin en: `src/features/admin/actions.ts`
+- Inline server actions en Server Components: `'use server'` debe ser primer statement dentro de la función
+- Siempre llamar `revalidatePath()` después de mutaciones
+
+## Variables de entorno requeridas
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+`NEXT_PUBLIC_WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`
+
+## Build / Deploy
+- Verificar build: `npm run build` (debe terminar sin errores TypeScript)
+- Limpiar cache si hay código obsoleto: `rm -rf .next`
+- `SUPABASE_SERVICE_ROLE_KEY` va en Vercel como variable de servidor (NO `NEXT_PUBLIC_`)
+- Desactivar Deployment Protection en Vercel si hay 401 en preview URLs
+
 <!-- VERCEL BEST PRACTICES START -->
 ## Best practices for developing on Vercel
 

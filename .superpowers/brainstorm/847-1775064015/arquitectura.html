@@ -1,0 +1,43 @@
+<h2>Arquitectura: 3 Enfoques de Refactorización</h2>
+<p class="subtitle">¿Cómo transformamos el marketplace en tienda única?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Fusión Total — 2 roles: admin + buyer</h3>
+      <p>Eliminar completamente <code>seller</code>. El admin hereda TODAS las funciones del seller. Una sola tabla <code>company_config</code> reemplaza <code>stores</code>. Rutas: <code>/admin/*</code> para todo el panel, <code>/cuenta/*</code> para compradores.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Máxima simpleza</li><li>Sin ambigüedad de roles</li><li>Schema limpio</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Más cambios en DB</li><li>Hay que migrar lógica seller → admin</li></ul></div>
+      </div>
+      <p style="margin-top:0.5rem;font-weight:600;color:#a78bfa">⭐ RECOMENDADO</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Renombrado Suave — seller se convierte en admin</h3>
+      <p>Mantener la tabla <code>stores</code> pero con un solo registro (la empresa). El rol <code>seller</code> pasa a llamarse <code>admin</code> en el enum. El dashboard <code>/dashboard</code> se convierte en panel admin. Cambios mínimos.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Cambios mínimos en código</li><li>Menos riesgo de romper funciones</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Queda código de marketplace disfrazado</li><li>Confuso para mantenimiento futuro</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Híbrido — Eliminar stores, fusionar panels</h3>
+      <p>Eliminar <code>stores</code> y <code>store_id</code> del schema. Fusionar <code>(seller)/dashboard</code> y <code>(admin)/admin</code> en un solo <code>(admin)/panel</code>. El admin ve productos, pedidos, clientes, inventario, promociones en un solo panel unificado.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Panel admin más potente</li><li>Schema verdaderamente limpio</li><li>Base sólida para escalar</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Trabajo medio — más que B, menos que rebuild</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem">Haz clic en una opción o responde en terminal</p>

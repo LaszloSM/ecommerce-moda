@@ -1,0 +1,52 @@
+<h2>Diseño: Modelo de Datos</h2>
+<p class="subtitle">Sección 2 de 3 — Cambios al schema de la base de datos</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+
+  <div class="mockup">
+    <div class="mockup-header" style="color:#ef4444">❌ Se elimina / modifica</div>
+    <div class="mockup-body" style="font-size:0.85rem">
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#ef4444"><strong>ELIMINAR tabla</strong> <code>stores</code></div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#ef4444"><strong>ELIMINAR columna</strong> <code>products.store_id</code></div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#ef4444"><strong>ELIMINAR columna</strong> <code>orders.store_id</code></div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#ef4444"><strong>ELIMINAR columna</strong> <code>coupons.store_id</code></div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#fbbf24"><strong>MODIFICAR enum</strong> <code>user_role</code>: quitar <code>seller</code>, dejar solo <code>buyer | admin</code></div>
+      <div style="padding:0.4rem 0;color:#fbbf24"><strong>MIGRAR</strong> usuarios con rol <code>seller</code> → <code>admin</code></div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header" style="color:#22c55e">✅ Se agrega</div>
+    <div class="mockup-body" style="font-size:0.85rem">
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#22c55e"><strong>NUEVA tabla</strong> <code>company_config</code> (fila única)</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;font-size:0.8rem;color:#9ca3af">
+        name, tagline, logo_url, banner_urls[], email, phone, address, city, nit, social_links (jsonb), shipping_methods (jsonb), payment_methods (jsonb), created_at
+      </div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333;color:#22c55e"><strong>NUEVA columna</strong> <code>categories.image_url</code></div>
+      <div style="padding:0.4rem 0;color:#22c55e"><strong>NUEVA columna</strong> <code>products.brand</code></div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:1rem">
+  <div class="mockup">
+    <div class="mockup-header">📊 Tablas que se mantienen igual</div>
+    <div class="mockup-body" style="font-size:0.85rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem">
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>profiles</code><br><span style="font-size:0.75rem;color:#9ca3af">+ rol admin</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>products</code><br><span style="font-size:0.75rem;color:#9ca3af">- store_id</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>categories</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>orders</code><br><span style="font-size:0.75rem;color:#9ca3af">- store_id</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>order_items</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>cart_items</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>addresses</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>reviews</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>coupons</code><br><span style="font-size:0.75rem;color:#9ca3af">- store_id</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>product_variants</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>wishlists</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+      <div style="padding:0.4rem;background:#1a1a2e;border-radius:4px;text-align:center"><code>notifications</code><br><span style="font-size:0.75rem;color:#9ca3af">sin cambios</span></div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem">¿Este modelo de datos se ve correcto? Responde en terminal.</p>

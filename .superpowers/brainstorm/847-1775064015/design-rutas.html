@@ -1,0 +1,52 @@
+<h2>Diseño: Estructura de Rutas</h2>
+<p class="subtitle">Sección 1 de 3 — ¿Se ve bien esta estructura?</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem">
+
+  <div class="mockup">
+    <div class="mockup-header">🌐 Público (sin login)</div>
+    <div class="mockup-body" style="font-size:0.85rem">
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/</code> — Home de marca</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/catalogo</code> — Todos los productos</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/categoria/[slug]</code> — Por categoría</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/producto/[slug]</code> — Detalle</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/buscar</code> — Búsqueda</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/login</code> — Iniciar sesión</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/registro</code> — Crear cuenta</div>
+      <div style="padding:0.4rem 0"><code>/recuperar</code> — Recuperar clave</div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">🛍️ Comprador (requiere login)</div>
+    <div class="mockup-body" style="font-size:0.85rem">
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/carrito</code> — Carrito</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/checkout</code> — Pago (Wompi)</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/checkout/exito/[id]</code> — Confirmación</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/cuenta</code> — Mi perfil</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/cuenta/pedidos</code> — Mis pedidos</div>
+      <div style="padding:0.4rem 0"><code>/cuenta/direcciones</code> — Direcciones</div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">⚙️ Admin (requiere rol admin)</div>
+    <div class="mockup-body" style="font-size:0.85rem">
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel</code> — Dashboard + métricas</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel/productos</code> — CRUD productos</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel/categorias</code> — CRUD categorías</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel/pedidos</code> — Gestión pedidos</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel/clientes</code> — Ver clientes</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel/inventario</code> — Stock bajo / agotados</div>
+      <div style="padding:0.4rem 0;border-bottom:1px solid #333"><code>/panel/promociones</code> — Cupones</div>
+      <div style="padding:0.4rem 0"><code>/panel/configuracion</code> — Empresa, banners, envíos</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:1.5rem;padding:1rem;background:#1a1a2e;border-radius:8px;border:1px solid #4c1d95">
+  <p style="margin:0;font-size:0.9rem"><strong>Lo que se elimina:</strong> <code>/tienda/[slug]</code> · <code>/dashboard/*</code> (seller) · <code>/admin/tiendas</code> · Rol <code>seller</code> en DB · Tabla <code>stores</code></p>
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem">¿Esta estructura de rutas se ve bien? Responde en terminal.</p>
